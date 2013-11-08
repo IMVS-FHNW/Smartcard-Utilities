@@ -237,7 +237,7 @@ public class CommandAPDU {
 		}
 		// Case 2 Extended APDU
 		else if (isExtendedAPDU() && data.length == 7) {
-			return (data[5] << 8) & data[6];
+			return (data[5] << 8) | data[6];
 		}
 		// Case 3 APDU
 		else if (data.length == 4 + (isExtendedAPDU() ? 3 : 1) + getLc()) {
