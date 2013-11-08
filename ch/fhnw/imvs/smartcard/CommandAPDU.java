@@ -254,6 +254,25 @@ public class CommandAPDU {
 	}
 
 	/**
+	 * Returns the length of the Data in the expected Response APDU as set in
+	 * the Le field. This is a convenience function based on
+	 * {@link ch.fhnw.imvs.smartcard.CommandAPDU#getLe() int getLe()}.
+	 * 
+	 * @return the expected maximum length of the Response APDU.
+	 */
+	public int getAnswerLength() {
+		int le = getLe();
+		switch (le) {
+		case -1:
+			return 0;
+		case 0:
+			return isExtendedAPDU() ? 65536 : 256;
+		default:
+			return le;
+		}
+	}
+
+	/**
 	 * Returns the Value of the Lc field of this APDU if present, or
 	 * <code>0</code> otherwise.
 	 * 
