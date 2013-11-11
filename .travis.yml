@@ -1,0 +1,9 @@
+language: java
+branches:
+  only:
+  - master
+install: ant javadoc
+after_success: bash postbuild.sh
+env:
+  global:
+    secure: ZHBzO5fuo1QUNUWYnPOPQJ1h2HI/Fl/wqdmcYwqS8Py7R5UWy+osp4Xc19dLSD8ARYPop/REuY4KYb50VJ1wr9ofKNOk8hPcvUq7VdE7d196cOWS/iZJz48s056ffvUkpUsJROaiewFGD0difjwCSJkwWKOXdhRJB1UkKBVIblk=
