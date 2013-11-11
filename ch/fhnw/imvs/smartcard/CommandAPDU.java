@@ -347,5 +347,22 @@ public class CommandAPDU {
 		System.arraycopy(data, 0, ret, 0, data.length);
 		return ret;
 	}
+	
+	/**
+	 * Returns true if the underlying bytearray is equal.
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o != null) {
+			if (o instanceof CommandAPDU) {
+				return data.equals(((CommandAPDU) o).data);
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
 
 }
