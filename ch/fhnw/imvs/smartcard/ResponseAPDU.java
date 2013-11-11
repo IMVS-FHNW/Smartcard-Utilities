@@ -11,6 +11,8 @@ public class ResponseAPDU {
 
 	public static final int STATUS_OK = 0x9000;
 	
+	public static final int STATUS_UNKNOWN_ERROR = 0x6F00;
+	
 	/**
 	 * Contains the bytearray-Representation of this APDU
 	 */
