@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="private" author="true" classpath="." destdir="doc" doctitle="SmartCard Utilities (IMVS-FHNW)" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="ch.fhnw.imvs.smartcard" source="1.7" sourcepath="." splitindex="true" use="true" version="true"/>
+    </target>
+</project>
