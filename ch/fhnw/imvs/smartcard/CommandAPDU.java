@@ -1,5 +1,9 @@
 package ch.fhnw.imvs.smartcard;
 
+import java.nio.ByteBuffer;
+
+import ch.fhnw.imvs.util.ConverterUtils;
+
 /**
  * 
  * 
@@ -80,14 +84,19 @@ package ch.fhnw.imvs.smartcard;
  * 
  * <p>
  * 
- * The Function {@link ch.fhnw.imvs.smartcard.CommandAPDU#isValidAPDU() boolean
- * isValidAPDU()} returns true only if all the rules above are followed. If the
- * APDU isn't valid, the behaviour of the class isn't specified (This includes
- * exceptions).
+ * The Function
+ * {@link ch.fhnw.imvs.nfcsupport.smartcard.smartcard.CommandAPDU#isValidAPDU()
+ * boolean isValidAPDU()} returns true only if all the rules above are followed.
+ * If the APDU isn't valid, the behaviour of the class isn't specified (This
+ * includes exceptions).
  * 
  * @author Christof Arnosti (christof.arnosti@fhnw.ch)
  */
 public class CommandAPDU {
+
+	public static final byte INS_GET_PENDING_RESULT = (byte) 0xFF;
+
+	public static final byte INS_GET_REMAINING_RESULT = (byte) 0xFD;
 
 	/**
 	 * Contains the bytearray-Representation of this APDU
@@ -107,6 +116,44 @@ public class CommandAPDU {
 		} else {
 			this.data = new byte[0];
 		}
+	}
+
+	/**
+	 * Creates a {@link CommandAPDU} object from header, body and le. Does not support extended APDU.
+	 * @param header The Bytearray containing the header.
+	 * @param body The Bytearray containing the body. Null if no body.
+	 * @param le The Bytearray containing the response length expected. Null if no response expected.
+	 */
+	public CommandAPDU(final byte[] header, final byte[] body, final Byte le) {
+		// TODO support extended APDU
+		
+		if ((header == null) || header.length != 4) {
+			this.data = new byte[0];
+			return;
+		}
+		int dataLength = header.length + body.length;
+		if (!isEmpty(body)) {
+			dataLength += 1;
+		}
+		if (le != null) {
+			dataLength += 1;
+		}
+
+		ByteBuffer buffer = ByteBuffer.allocate(dataLength);
+		buffer.put(header);
+		if (!isEmpty(body)) {
+			buffer.put((byte) body.length);
+			buffer.put(body);
+		}
+		if (le != null) {
+			buffer.put(le);
+		}
+
+		this.data = buffer.array();
+	}
+
+	private boolean isEmpty(final byte[] bs) {
+		return (bs == null) || bs.length == 0;
 	}
 
 	/**
@@ -223,7 +270,7 @@ public class CommandAPDU {
 	 * @return Value of the Le field or <code>-1</code> if not present.
 	 *         <code>0</code> is to be interpreted as 65536 (Extended APDU) or
 	 *         256 (Standard APDU), see
-	 *         {@link ch.fhnw.imvs.smartcard.CommandAPDU#isExtendedAPDU()
+	 *         {@link ch.fhnw.imvs.nfcsupport.smartcard.smartcard.CommandAPDU#isExtendedAPDU()
 	 *         boolean isExtendedAPDU()}.
 	 */
 	public int getLe() {
@@ -237,7 +284,7 @@ public class CommandAPDU {
 		}
 		// Case 2 Extended APDU
 		else if (isExtendedAPDU() && data.length == 7) {
-			return (data[5] << 8) | data[6];
+			return (data[5] << 8) & data[6];
 		}
 		// Case 3 APDU
 		else if (data.length == 4 + (isExtendedAPDU() ? 3 : 1) + getLc()) {
@@ -250,25 +297,6 @@ public class CommandAPDU {
 		// Case 4 Standard APDU
 		else {
 			return data[data.length - 1];
-		}
-	}
-
-	/**
-	 * Returns the length of the Data in the expected Response APDU as set in
-	 * the Le field. This is a convenience function based on
-	 * {@link ch.fhnw.imvs.smartcard.CommandAPDU#getLe() int getLe()}.
-	 * 
-	 * @return the expected maximum length of the Response APDU.
-	 */
-	public int getAnswerLength() {
-		int le = getLe();
-		switch (le) {
-		case -1:
-			return 0;
-		case 0:
-			return isExtendedAPDU() ? 65536 : 256;
-		default:
-			return le;
 		}
 	}
 
@@ -347,22 +375,9 @@ public class CommandAPDU {
 		System.arraycopy(data, 0, ret, 0, data.length);
 		return ret;
 	}
-	
-	/**
-	 * Returns true if the underlying bytearray is equal.
-	 */
+
 	@Override
-	public boolean equals(Object o) {
-		if (o != null) {
-			if (o instanceof CommandAPDU) {
-				return data.equals(((CommandAPDU) o).data);
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
+	public String toString() {
+		return ConverterUtils.toHexString(getRaw());
 	}
-
-
 }
