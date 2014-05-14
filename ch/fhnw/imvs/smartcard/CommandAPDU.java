@@ -85,7 +85,7 @@ import ch.fhnw.imvs.util.ConverterUtils;
  * <p>
  * 
  * The Function
- * {@link ch.fhnw.imvs.nfcsupport.smartcard.smartcard.CommandAPDU#isValidAPDU()
+ * {@link ch.fhnw.imvs.smartcard.CommandAPDU#isValidAPDU()
  * boolean isValidAPDU()} returns true only if all the rules above are followed.
  * If the APDU isn't valid, the behaviour of the class isn't specified (This
  * includes exceptions).
@@ -270,7 +270,7 @@ public class CommandAPDU {
 	 * @return Value of the Le field or <code>-1</code> if not present.
 	 *         <code>0</code> is to be interpreted as 65536 (Extended APDU) or
 	 *         256 (Standard APDU), see
-	 *         {@link ch.fhnw.imvs.nfcsupport.smartcard.smartcard.CommandAPDU#isExtendedAPDU()
+	 *         {@link ch.fhnw.imvs.smartcard.CommandAPDU#isExtendedAPDU()
 	 *         boolean isExtendedAPDU()}.
 	 */
 	public int getLe() {
