@@ -395,8 +395,8 @@ public final class TLV {
 		TLV ret = null;
 		if (hasChildren) {
 			for (TLV child : children) {
-				if (Arrays.copyOf(child.header, child.header.length - 1)
-						.equals(header)) {
+				if (Arrays.equals(Arrays.copyOf(child.header, child.header.length - 1)
+						, header)) {
 					return child;
 				}
 			}
